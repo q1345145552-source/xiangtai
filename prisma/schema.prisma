@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model ServicePage {
+  id          String   @id @default(cuid())
+  domain      String
+  slug        String   @unique
+  title       String
+  description String
+  caseText    String
+  entryName   String
+  entryUrl    String
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SolutionPlan {
+  id          String   @id @default(cuid())
+  title       String
+  industry    String
+  tags        String
+  content     String
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model QuestionOptionPlan {
+  id          String   @id @default(cuid())
+  questionNo  Int
+  answerCode  String   @unique
+  answerLabel String
+  content     String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SolutionEvaluation {
+  id             String   @id @default(cuid())
+  evaluationCode String   @unique
+  customerName   String   @default("")
+  customerCompany String  @default("")
+  customerPhone  String   @default("")
+  customerEmail  String   @default("")
+  annualRevenue  String   @default("")
+  mallNeed       String   @default("")
+  productType    String   @default("")
+  logisticsType  String   @default("")
+  qualificationNeedCode String @default("")
+  qualificationMethodCode String @default("")
+  qualificationFinalCode String @default("")
+  visaNeedCode    String   @default("")
+  visaMethodCode  String   @default("")
+  visaFinalCode   String   @default("")
+  invoiceNeedCode String   @default("")
+  accountOpeningAbility String @default("")
+  supplementaryNote String @default("")
+  industry       String
+  demandTags     String
+  matchedPlanId  String?
+  matchedPlan    String?
+  generatedPlanContent String @default("")
+  createdAt      DateTime @default(now())
+}
+
+model EvaluationAccessCode {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  status    String    @default("available")
+  copiedAt  DateTime?
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model KnowledgeDoc {
+  id        String   @id @default(cuid())
+  title     String
+  sourceUrl String?
+  content   String
+  version   String   @default("v1")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InquiryLog {
+  id         String   @id @default(cuid())
+  question   String
+  answer     String
+  sourceList String
+  latencyMs  Int
+  createdAt  DateTime @default(now())
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: radial-gradient(circle at top, #f8fbff 0%, #eef3fb 45%, #e8edf6 100%);
+  color: #0f172a;
+}
+
+@layer components {
+  .panel {
+    @apply rounded-2xl border border-slate-200/70 bg-white/95 shadow-[0_10px_30px_rgba(15,23,42,0.06)] backdrop-blur;
+  }
+
+  .panel-strong {
+    @apply rounded-2xl border border-slate-200/70 bg-gradient-to-br from-slate-900 via-slate-800 to-brand-900 text-white shadow-[0_16px_40px_rgba(15,23,42,0.25)];
+  }
+
+  .input-base {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition duration-200 placeholder:text-slate-400 focus:border-brand-600 focus:ring-4 focus:ring-brand-100;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-brand-700 to-brand-600 px-4 py-2 font-medium text-white transition duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/10 active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-100 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2 font-medium text-slate-700 transition duration-200 hover:-translate-y-0.5 hover:border-brand-600 hover:text-brand-700 hover:shadow-md active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-200;
+  }
+
+  .tag-button {
+    @apply rounded-full border border-slate-300 px-3 py-1 text-sm text-slate-700 transition duration-200 hover:-translate-y-0.5 hover:border-brand-600 hover:text-brand-700;
+  }
+
+  .tag-button-active {
+    @apply rounded-full border border-brand-700 bg-brand-700 px-3 py-1 text-sm text-white shadow-sm;
+  }
+}
