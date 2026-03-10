@@ -201,21 +201,25 @@ export default function SolutionPage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      <section className="panel overflow-hidden p-0">
-        <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
-          <h1 className="text-2xl font-bold text-slate-900">湘泰出海方案评估</h1>
-          <p className="mt-1 text-sm text-slate-600">请先输入管理员提供的评估码，校验通过后再进入正式问卷。</p>
+      <section className="overflow-hidden rounded-2xl border border-red-900/50 bg-gradient-to-br from-black via-zinc-950 to-red-950 p-0 text-zinc-100 shadow-[0_16px_40px_rgba(0,0,0,0.35)]">
+        <div className="border-b border-red-900/40 bg-black/40 px-6 py-4">
+          <h1 className="text-2xl font-bold text-red-300">湘泰出海方案评估</h1>
+          <p className="mt-1 text-sm text-zinc-300">请先输入管理员提供的评估码，校验通过后再进入正式问卷。</p>
         </div>
         <div className="px-6 py-5">
-          <label className="block text-center text-sm font-medium text-slate-700">评估码</label>
+          <label className="block text-center text-sm font-medium text-zinc-200">评估码</label>
           <div className="mt-2 flex flex-col gap-3 md:flex-row">
             <input
               value={accessCode}
               onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
-              className="input-base text-center md:max-w-sm"
+              className="input-base border-red-900/60 bg-black/40 text-center text-zinc-100 placeholder:text-zinc-500 focus:border-red-500 focus:ring-red-900/30 md:max-w-sm"
               placeholder="例如：EVA-ABCD-4F8K"
             />
-            <button onClick={verifyCode} disabled={verifying} className="btn-secondary">
+            <button
+              onClick={verifyCode}
+              disabled={verifying}
+              className="inline-flex items-center justify-center rounded-lg border border-red-400/50 bg-black/30 px-4 py-2 font-medium text-red-100 transition duration-300 hover:-translate-y-0.5 hover:border-red-300 hover:bg-red-900/30 hover:text-white active:scale-[0.98]"
+            >
               {verifying ? "校验中..." : "校验评估码"}
             </button>
           </div>
@@ -226,20 +230,20 @@ export default function SolutionPage() {
       </section>
 
       {verifiedCode && (
-        <section className="panel overflow-hidden p-0">
-          <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
-            <h2 className="text-xl font-semibold text-slate-900">评估问卷</h2>
-            <p className="mt-1 text-sm text-slate-600">当前评估码：{verifiedCode}</p>
+        <section className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950/95 p-0 text-zinc-100 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
+          <div className="border-b border-red-900/40 bg-black/40 px-6 py-4">
+            <h2 className="text-xl font-semibold text-red-300">评估问卷</h2>
+            <p className="mt-1 text-sm text-zinc-300">当前评估码：{verifiedCode}</p>
           </div>
 
           <div className="space-y-5 px-6 py-5">
-            <section className="rounded-xl border border-slate-200 bg-white p-4">
+            <section className="rounded-xl border border-zinc-800 bg-black/30 p-4">
               <div className="mb-3 flex items-center gap-3">
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-700">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-red-900/70 text-xs font-semibold text-red-200">
                   1
                 </span>
                 <h3 className="text-base font-semibold">客户信息填写</h3>
-                <span className="rounded bg-rose-50 px-2 py-0.5 text-xs text-rose-600">必填</span>
+                <span className="rounded bg-red-900/40 px-2 py-0.5 text-xs text-red-200">必填</span>
               </div>
               <div className="flex flex-col gap-3">
                 <input
@@ -276,17 +280,17 @@ export default function SolutionPage() {
               </div>
             </section>
 
-            <section className="rounded-xl border border-slate-200 bg-white p-4">
+            <section className="rounded-xl border border-zinc-800 bg-black/30 p-4">
               <div className="mb-3 flex items-center gap-3">
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-700">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-red-900/70 text-xs font-semibold text-red-200">
                   2
                 </span>
                 <h3 className="text-lg font-semibold">注册需求问卷</h3>
-                <span className="rounded bg-rose-50 px-2 py-0.5 text-xs text-rose-600">必填</span>
+                <span className="rounded bg-red-900/40 px-2 py-0.5 text-xs text-red-200">必填</span>
               </div>
 
               <div className="space-y-4">
-                <div className="rounded-lg border border-slate-200 bg-slate-50/70 p-3">
+                <div className="rounded-lg border border-zinc-700 bg-black/35 p-3">
                   <p className="text-center text-base font-semibold">1. Mall店需求</p>
                   <div className="mt-2 flex flex-col items-center gap-2">
                     {MALL_OPTIONS.map((option, idx) => {
@@ -305,7 +309,7 @@ export default function SolutionPage() {
                   </div>
                 </div>
 
-                <div className="rounded-lg border border-slate-200 bg-slate-50/70 p-3">
+                <div className="rounded-lg border border-zinc-700 bg-black/35 p-3">
                   <p className="text-center text-base font-semibold">2. 销售的产品类型</p>
                   <div className="mt-2 flex flex-col items-center gap-2">
                     {PRODUCT_TYPE_OPTIONS.map((option, idx) => {
@@ -324,7 +328,7 @@ export default function SolutionPage() {
                   </div>
                 </div>
 
-                <div className="rounded-lg border border-slate-200 bg-slate-50/70 p-3">
+                <div className="rounded-lg border border-zinc-700 bg-black/35 p-3">
                   <p className="text-center text-base font-semibold">3. 物流清关</p>
                   <div className="mt-2 flex flex-col items-center gap-2">
                     {LOGISTICS_OPTIONS.map((option, idx) => {
@@ -343,7 +347,7 @@ export default function SolutionPage() {
                   </div>
                 </div>
 
-                <div className="rounded-lg border border-slate-200 bg-slate-50/70 p-3">
+                <div className="rounded-lg border border-zinc-700 bg-black/35 p-3">
                   <p className="text-center text-base font-semibold">4. 资质需求</p>
                   <div className="mt-2 flex flex-col items-center gap-2">
                     {QUALIFICATION_NEED_OPTIONS.map((option) => {
@@ -385,13 +389,13 @@ export default function SolutionPage() {
                         })}
                       </div>
                       {qualificationMethodCode && (
-                        <p className="mt-2 text-center text-xs text-slate-500">当前资质编码：{`${qualificationNeedCode}${qualificationMethodCode}`}</p>
+                        <p className="mt-2 text-center text-xs text-zinc-400">当前资质编码：{`${qualificationNeedCode}${qualificationMethodCode}`}</p>
                       )}
                     </>
                   )}
                 </div>
 
-                <div className="rounded-lg border border-slate-200 bg-slate-50/70 p-3">
+                <div className="rounded-lg border border-zinc-700 bg-black/35 p-3">
                   <p className="text-center text-base font-semibold">5. 工作签证需求</p>
                   <div className="mt-2 flex flex-col items-center gap-2">
                     {VISA_NEED_OPTIONS.map((option) => {
@@ -433,13 +437,13 @@ export default function SolutionPage() {
                         })}
                       </div>
                       {visaMethodCode && (
-                        <p className="mt-2 text-center text-xs text-slate-500">当前签证编码：{`${visaNeedCode}${visaMethodCode}`}</p>
+                        <p className="mt-2 text-center text-xs text-zinc-400">当前签证编码：{`${visaNeedCode}${visaMethodCode}`}</p>
                       )}
                     </>
                   )}
                 </div>
 
-                <div className="rounded-lg border border-slate-200 bg-slate-50/70 p-3">
+                <div className="rounded-lg border border-zinc-700 bg-black/35 p-3">
                   <p className="text-center text-base font-semibold">6. 开票需求</p>
                   <div className="mt-2 flex flex-col items-center gap-2">
                     {INVOICE_NEED_OPTIONS.map((option) => {
@@ -458,7 +462,7 @@ export default function SolutionPage() {
                   </div>
                 </div>
 
-                <div className="rounded-lg border border-slate-200 bg-slate-50/70 p-3">
+                <div className="rounded-lg border border-zinc-700 bg-black/35 p-3">
                   <p className="text-center text-base font-semibold">7. 法人是否能来泰国开户</p>
                   <div className="mt-2 flex flex-col items-center gap-2">
                     {ACCOUNT_OPENING_OPTIONS.map((option) => {
@@ -477,7 +481,7 @@ export default function SolutionPage() {
                   </div>
                 </div>
 
-                <div className="rounded-lg border border-slate-200 bg-slate-50/70 p-3">
+                <div className="rounded-lg border border-zinc-700 bg-black/35 p-3">
                   <p className="text-center text-base font-semibold">8. 补充说明（选填）</p>
                   <textarea
                     value={supplementaryNote}
@@ -489,9 +493,9 @@ export default function SolutionPage() {
               </div>
             </section>
 
-            <div className="sticky bottom-3 rounded-xl border border-slate-200 bg-white/95 p-4 backdrop-blur">
+            <div className="sticky bottom-3 rounded-xl border border-zinc-700 bg-black/75 p-4 backdrop-blur">
               <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                <p className="text-sm text-slate-600">请确认必填项已完成后再提交问卷。</p>
+                <p className="text-sm text-zinc-300">请确认必填项已完成后再提交问卷。</p>
                 <button onClick={onMatch} disabled={loading} className="btn-primary md:min-w-44">
                   {loading ? "提交中..." : "提交评估问卷"}
                 </button>
@@ -499,23 +503,27 @@ export default function SolutionPage() {
               {formError && <p className="mt-3 text-sm text-red-600">{formError}</p>}
             </div>
 
-            <section className="rounded-xl border border-emerald-200 bg-emerald-50/40 p-4">
-              <div className="border-b border-emerald-200 pb-3">
-                <h3 className="text-lg font-semibold text-emerald-800">方案生成框</h3>
-                <p className="mt-1 text-sm text-emerald-700">提交评估问卷后，将在此展示根据问卷选项生成的专属方案内容。</p>
+            <section className="rounded-xl border border-red-900/50 bg-black/40 p-4">
+              <div className="border-b border-red-900/40 pb-3">
+                <h3 className="text-lg font-semibold text-red-300">方案生成框</h3>
+                <p className="mt-1 text-sm text-zinc-300">提交评估问卷后，将在此展示根据问卷选项生成的专属方案内容。</p>
               </div>
               {!result ? (
-                <p className="pt-4 text-sm text-slate-600">暂未生成方案，请先完成问卷并点击“提交评估问卷”。</p>
+                <p className="pt-4 text-sm text-zinc-300">暂未生成方案，请先完成问卷并点击“提交评估问卷”。</p>
               ) : (
                 <div className="pt-4">
-                  <p className="text-sm text-slate-700">评估码：{result.evaluationCode}</p>
+                  <p className="text-sm text-zinc-200">评估码：{result.evaluationCode}</p>
                   <div className="mt-3 flex flex-wrap items-center gap-3">
-                    <button type="button" className="btn-secondary" onClick={copyPlanContent}>
+                    <button
+                      type="button"
+                      className="inline-flex items-center justify-center rounded-lg border border-red-400/50 bg-black/30 px-4 py-2 font-medium text-red-100 transition duration-300 hover:-translate-y-0.5 hover:border-red-300 hover:bg-red-900/30 hover:text-white active:scale-[0.98]"
+                      onClick={copyPlanContent}
+                    >
                       一键复制方案
                     </button>
                     {copyMsg && <p className="text-sm text-emerald-700">{copyMsg}</p>}
                   </div>
-                  <p className="mt-3 whitespace-pre-line rounded-lg border border-emerald-200 bg-white p-4 text-slate-700">
+                  <p className="mt-3 whitespace-pre-line rounded-lg border border-zinc-700 bg-black/45 p-4 text-zinc-200">
                     {result.content}
                   </p>
                 </div>

@@ -9,16 +9,23 @@ export default async function AdminSolutionsPage() {
     redirect("/admin");
   }
 
-  const [optionPlans, bigPlans] = await Promise.all([
-    prisma.questionOptionPlan.findMany({
-      orderBy: [{ questionNo: "asc" }, { answerCode: "asc" }]
-    }),
-    prisma.solutionPlan.findMany({
-      where: { industry: "问卷大方案" },
-      orderBy: { createdAt: "desc" },
-      take: 100
-    })
-  ]);
+  let optionPlans: Awaited<ReturnType<typeof prisma.questionOptionPlan.findMany>> = [];
+  let bigPlans: Awaited<ReturnType<typeof prisma.solutionPlan.findMany>> = [];
+  try {
+    [optionPlans, bigPlans] = await Promise.all([
+      prisma.questionOptionPlan.findMany({
+        orderBy: [{ questionNo: "asc" }, { answerCode: "asc" }]
+      }),
+      prisma.solutionPlan.findMany({
+        where: { industry: "问卷大方案" },
+        orderBy: { createdAt: "desc" },
+        take: 100
+      })
+    ]);
+  } catch {
+    optionPlans = [];
+    bigPlans = [];
+  }
 
   return (
     <div>

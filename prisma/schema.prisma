@@ -86,10 +86,24 @@ model KnowledgeDoc {
   title     String
   sourceUrl String?
   content   String
+  tags      String   @default("")
   version   String   @default("v1")
   isActive  Boolean  @default(true)
+  chunks    KnowledgeChunk[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model KnowledgeChunk {
+  id           String       @id @default(cuid())
+  docId        String
+  doc          KnowledgeDoc @relation(fields: [docId], references: [id], onDelete: Cascade)
+  chunkNo      Int
+  content      String
+  keywordIndex String
+  createdAt    DateTime     @default(now())
+
+  @@index([docId, chunkNo])
 }
 
 model InquiryLog {

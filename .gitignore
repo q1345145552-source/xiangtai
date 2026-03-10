@@ -9,10 +9,6 @@
 # env
 .env
 
-# prisma
-/prisma/dev.db
-/prisma/dev.db-journal
-
 # misc
 .DS_Store
 npm-debug.log*

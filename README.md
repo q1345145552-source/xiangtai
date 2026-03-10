@@ -12,6 +12,41 @@
    - `npm run dev`
    - 打开：`http://127.0.0.1:3002`
 
+## DeepSeek + RAG 服务（FastAPI）
+
+1. 进入 AI 服务目录并安装依赖
+   - `cd ai_service`
+   - `python3 -m venv .venv && source .venv/bin/activate`
+   - `pip install -r requirements.txt`
+2. 配置环境变量
+   - `cp .env.example .env`
+   - 至少填写：`DEEPSEEK_API_KEY`
+3. 启动 AI 服务
+   - `uvicorn main:app --host 127.0.0.1 --port 8001 --reload`
+4. 主站环境变量
+   - `.env` 增加：`AI_BACKEND_URL="http://127.0.0.1:8001"`
+
+说明：
+- 管理员上传 PDF/MD/TXT 后，会自动切片并写入 ChromaDB 向量库（目录默认 `ai_service/chroma_data`）。
+- AI 回答会优先按页面上下文标签检索（如工商页优先检索“工商类”标签文档）。
+
+### Railway 部署 ai_service
+
+```bash
+cd "/Users/liuxiong/Desktop/湘泰系统网站/刘雄网站代码/ai_service"
+npx @railway/cli login
+npx @railway/cli init
+npx @railway/cli up
+```
+
+在 Railway 服务中配置环境变量：
+- `DEEPSEEK_API_KEY`
+- `DEEPSEEK_BASE_URL=https://api.deepseek.com/v1`
+- `DEEPSEEK_MODEL=deepseek-chat`
+- `CHROMA_DIR=./chroma_data`
+
+部署完成后，将主站 Vercel 的 `AI_BACKEND_URL` 设置为 Railway 分配的公网地址（例如 `https://xxx.up.railway.app`）。
+
 ## 启动异常排查
 
 - 如果页面出现 500 或 `Cannot find module './xxx.js'`：

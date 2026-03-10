@@ -10,7 +10,7 @@ export default async function AdminKbPage() {
   }
   const initial = await prisma.knowledgeDoc.findMany({
     orderBy: { updatedAt: "desc" },
-    select: { id: true, title: true, version: true, sourceUrl: true }
+    select: { id: true, title: true, version: true, sourceUrl: true, tags: true }
   });
 
   return (

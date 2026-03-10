@@ -2,10 +2,15 @@ import { prisma } from "@/lib/prisma";
 import { SERVICE_DOMAINS } from "@/lib/constants";
 
 export async function getServiceByDomain(domain: string) {
-  const rows = await prisma.servicePage.findMany({
-    where: { isActive: true },
-    orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }]
-  });
+  let rows: Awaited<ReturnType<typeof prisma.servicePage.findMany>> = [];
+  try {
+    rows = await prisma.servicePage.findMany({
+      where: { isActive: true },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }]
+    });
+  } catch {
+    rows = [];
+  }
 
   const filtered = rows.filter((row) => {
     if (domain === "government") {

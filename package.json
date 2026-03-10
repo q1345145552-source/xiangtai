@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "WATCHPACK_POLLING=true next dev --hostname 127.0.0.1 --port 3002",
     "dev:clean": "rm -rf .next .next-dev && WATCHPACK_POLLING=true next dev --hostname 127.0.0.1 --port 3002",
+    "prebuild": "prisma generate",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
