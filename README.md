@@ -27,7 +27,7 @@
    - `.env` 增加：`AI_BACKEND_URL="http://127.0.0.1:8001"`
 
 说明：
-- 管理员上传 PDF/MD/TXT 后，会自动切片并写入 ChromaDB 向量库（目录默认 `ai_service/chroma_data`）。
+- 管理员上传 PDF/MD/TXT 后，会自动切片并写入 ChromaDB 向量库（本地默认 `ai_service/chroma_data`，Railway 建议使用持久化目录 `/data/chroma_data`）。
 - AI 回答会优先按页面上下文标签检索（如工商页优先检索“工商类”标签文档）。
 
 ### Railway 部署 ai_service
@@ -43,7 +43,9 @@ npx @railway/cli up
 - `DEEPSEEK_API_KEY`
 - `DEEPSEEK_BASE_URL=https://api.deepseek.com/v1`
 - `DEEPSEEK_MODEL=deepseek-chat`
-- `CHROMA_DIR=./chroma_data`
+- `CHROMA_DIR=/data/chroma_data`
+
+并在 Railway 为 `ai_service` 挂载持久化卷（Volume）到 `/data`，确保管理员投喂的知识库数据长期保留。
 
 部署完成后，将主站 Vercel 的 `AI_BACKEND_URL` 设置为 Railway 分配的公网地址（例如 `https://xxx.up.railway.app`）。
 

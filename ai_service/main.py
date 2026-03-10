@@ -17,7 +17,8 @@ from pypdf import PdfReader
 
 app = FastAPI(title="Xiangtai AI RAG Service", version="1.0.0")
 
-CHROMA_DIR = os.getenv("CHROMA_DIR", "./chroma_data")
+DEFAULT_CHROMA_DIR = "/data/chroma_data" if os.path.isdir("/data") else "./chroma_data"
+CHROMA_DIR = os.getenv("CHROMA_DIR", DEFAULT_CHROMA_DIR)
 CHROMA_COLLECTION = os.getenv("CHROMA_COLLECTION", "xiangtai_kb")
 EMBED_DIM = max(int(os.getenv("EMBED_DIM", "256")), 64)
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
