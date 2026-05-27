@@ -1,6 +1,12 @@
+import { createHash } from "crypto";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+const PASSWORD_SALT = process.env.PASSWORD_SALT || "xiangtai-default-salt-2024";
+
+function hashPassword(password) {
+  return createHash("sha256").update(PASSWORD_SALT + password).digest("hex");
+}
 
 const serviceDomains = [
   {
@@ -69,11 +75,30 @@ const serviceDomains = [
 ];
 
 async function main() {
+  // Seed admin with hashed password
+  const hashedPassword = hashPassword("123456");
   await prisma.adminUser.upsert({
     where: { username: "admin" },
-    update: {},
-    create: { username: "admin", password: "123456" }
+    update: { password: hashedPassword },
+    create: { username: "admin", password: hashedPassword }
   });
+
+  // Seed default fee categories
+  const feeCategories = [
+    { name: "入库费", code: "INBOUND" },
+    { name: "仓储费", code: "STORAGE" },
+    { name: "出库操作费", code: "HANDLING" },
+    { name: "尾程配送费", code: "LAST_MILE" },
+    { name: "退货处理费", code: "RETURN" },
+    { name: "附加服务费", code: "EXTRA" }
+  ];
+  for (const cat of feeCategories) {
+    await prisma.feeCategory.upsert({
+      where: { code: cat.code },
+      update: {},
+      create: cat
+    });
+  }
 
   for (const [idx, item] of serviceDomains.entries()) {
     await prisma.servicePage.upsert({
@@ -86,10 +111,7 @@ async function main() {
         entryUrl: item.entryUrl,
         sortOrder: idx
       },
-      create: {
-        ...item,
-        sortOrder: idx
-      }
+      create: { ...item, sortOrder: idx }
     });
   }
 
@@ -99,8 +121,7 @@ async function main() {
       title: "美妆品牌泰国启动方案",
       industry: "美妆",
       tags: "注册公司,TikTok入驻,海外仓",
-      content:
-        "阶段1：公司注册+税号办理（预计10-15工作日）\n阶段2：TikTok店铺入驻及基础运营配置\n阶段3：海外仓备货与物流时效SOP建立",
+      content: "阶段1：公司注册+税号办理（预计10-15工作日）\n阶段2：TikTok店铺入驻及基础运营配置\n阶段3：海外仓备货与物流时效SOP建立",
       status: "active"
     },
     {

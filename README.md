@@ -71,3 +71,58 @@ npx @railway/cli up
 - AI 智能咨询（基于知识库检索回答）
 - 静态方案匹配与评估码生成
 - 管理员后台（方案库、业务内容、知识库维护）
+
+## 海外仓财务勾兑系统
+
+### 功能说明
+
+- **对账批次管理**：创建、查看、更新、删除对账批次
+- **对账明细管理**：逐条添加或批量导入对账数据
+- **自动匹配**：系统自动对比我方金额与仓库方金额，标记匹配/差异状态
+- **差异处理**：标记差异原因，确认匹配，忽略异常项
+- **状态流转**：草稿 → 对账中 → 已确认 / 有争议
+- **审计日志**：记录所有操作历史
+
+### 使用流程
+
+1. 在管理后台 `/admin/reconciliation` 创建对账批次
+2. 填写仓库名称、对账周期等基本信息
+3. 通过「批量导入」或「添加单条」录入对账数据
+4. 系统自动计算差异，标记匹配状态
+5. 逐条审核差异项，确认或标记原因
+6. 确认对账后批次状态变为「已确认」
+
+### 批量导入数据格式
+
+```json
+[
+  {
+    "orderNo": "ORD001",
+    "orderDate": "2024-01-15",
+    "description": "入库费",
+    "myAmount": 1500,
+    "whAmount": 1500,
+    "currency": "THB"
+  },
+  {
+    "orderNo": "ORD002",
+    "orderDate": "2024-01-16",
+    "description": "仓储费",
+    "myAmount": 3200,
+    "whAmount": 3100,
+    "currency": "THB"
+  }
+]
+```
+
+### API 接口
+
+- `GET /api/admin/reconciliation` — 查询批次列表（支持 status 筛选、分页）
+- `POST /api/admin/reconciliation` — 创建批次
+- `PUT /api/admin/reconciliation` — 更新批次
+- `DELETE /api/admin/reconciliation` — 删除批次（仅草稿）
+- `GET /api/admin/reconciliation/items?batchId=xxx` — 查询明细
+- `POST /api/admin/reconciliation/items` — 添加明细
+- `PUT /api/admin/reconciliation/items` — 更新明细
+- `DELETE /api/admin/reconciliation/items` — 删除明细
+- `POST /api/admin/reconciliation/import` — 批量导入

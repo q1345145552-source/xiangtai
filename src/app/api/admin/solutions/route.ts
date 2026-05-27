@@ -1,70 +1,76 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { isAdminAuthed } from "@/lib/admin-auth";
+import { requireAdmin, apiError, apiSuccess, safeParseBody, str } from "@/lib/api-utils";
 
 export async function GET() {
+  const authErr = await requireAdmin();
+  if (authErr) return authErr;
+
   const rows = await prisma.solutionPlan.findMany({
     orderBy: { updatedAt: "desc" }
   });
-  return NextResponse.json(rows);
+  return apiSuccess(rows);
 }
 
 export async function POST(req: NextRequest) {
-  if (!(await isAdminAuthed())) {
-    return NextResponse.json({ error: "未授权" }, { status: 401 });
-  }
-  const body = await req.json();
+  const authErr = await requireAdmin();
+  if (authErr) return authErr;
+
+  const { data: body, error } = await safeParseBody(req);
+  if (error) return error;
+
   const row = await prisma.solutionPlan.create({
     data: {
-      title: String(body.title ?? ""),
-      industry: String(body.industry ?? ""),
-      tags: String(body.tags ?? ""),
-      content: String(body.content ?? ""),
-      status: String(body.status ?? "active")
+      title: str(body!, "title"),
+      industry: str(body!, "industry"),
+      tags: str(body!, "tags"),
+      content: str(body!, "content"),
+      status: str(body!, "status") || "active"
     }
   });
-  return NextResponse.json(row);
+  return apiSuccess(row, 201);
 }
 
 export async function PUT(req: NextRequest) {
-  if (!(await isAdminAuthed())) {
-    return NextResponse.json({ error: "未授权" }, { status: 401 });
-  }
-  const body = await req.json();
-  if (!body.id) {
-    return NextResponse.json({ error: "缺少ID" }, { status: 400 });
-  }
+  const authErr = await requireAdmin();
+  if (authErr) return authErr;
+
+  const { data: body, error } = await safeParseBody(req);
+  if (error) return error;
+
+  const id = str(body!, "id");
+  if (!id) return apiError("缺少ID");
+
+  const existing = await prisma.solutionPlan.findUnique({ where: { id } });
+  if (!existing) return apiError("方案不存在", 404);
+
   const row = await prisma.solutionPlan.update({
-    where: { id: String(body.id) },
+    where: { id },
     data: {
-      title: String(body.title ?? ""),
-      industry: String(body.industry ?? ""),
-      tags: String(body.tags ?? ""),
-      content: String(body.content ?? ""),
-      status: String(body.status ?? "active")
+      title: str(body!, "title") || existing.title,
+      industry: str(body!, "industry") || existing.industry,
+      tags: str(body!, "tags") || existing.tags,
+      content: str(body!, "content") || existing.content,
+      status: str(body!, "status") || existing.status
     }
   });
-  return NextResponse.json(row);
+  return apiSuccess(row);
 }
 
 export async function DELETE(req: NextRequest) {
-  if (!(await isAdminAuthed())) {
-    return NextResponse.json({ error: "未授权" }, { status: 401 });
-  }
-  const body = await req.json();
-  const id = String(body.id ?? "").trim();
-  if (!id) {
-    return NextResponse.json({ error: "缺少ID" }, { status: 400 });
-  }
+  const authErr = await requireAdmin();
+  if (authErr) return authErr;
+
+  const { data: body, error } = await safeParseBody(req);
+  if (error) return error;
+
+  const id = str(body!, "id");
+  if (!id) return apiError("缺少ID");
 
   const row = await prisma.solutionPlan.findUnique({ where: { id } });
-  if (!row) {
-    return NextResponse.json({ error: "方案不存在" }, { status: 404 });
-  }
-  if (row.industry !== "问卷大方案") {
-    return NextResponse.json({ error: "仅支持删除大方案快照" }, { status: 400 });
-  }
+  if (!row) return apiError("方案不存在", 404);
+  if (row.industry !== "问卷大方案") return apiError("仅支持删除大方案快照");
 
   await prisma.solutionPlan.delete({ where: { id } });
-  return NextResponse.json({ ok: true, id });
+  return apiSuccess({ ok: true, id });
 }

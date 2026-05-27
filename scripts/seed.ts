@@ -1,12 +1,40 @@
+import { createHash } from "crypto";
 import { prisma } from "../src/lib/prisma";
 import { SERVICE_DOMAINS } from "../src/lib/constants";
 
+const PASSWORD_SALT = process.env.PASSWORD_SALT || "xiangtai-default-salt-2024";
+
+function hashPassword(password: string): string {
+  return createHash("sha256")
+    .update(PASSWORD_SALT + password)
+    .digest("hex");
+}
+
 async function main() {
+  // Seed admin with hashed password
+  const hashedPassword = hashPassword("123456");
   await prisma.adminUser.upsert({
     where: { username: "admin" },
-    update: {},
-    create: { username: "admin", password: "123456" }
+    update: { password: hashedPassword },
+    create: { username: "admin", password: hashedPassword }
   });
+
+  // Seed default fee categories for financial reconciliation
+  const feeCategories = [
+    { name: "入库费", code: "INBOUND" },
+    { name: "仓储费", code: "STORAGE" },
+    { name: "出库操作费", code: "HANDLING" },
+    { name: "尾程配送费", code: "LAST_MILE" },
+    { name: "退货处理费", code: "RETURN" },
+    { name: "附加服务费", code: "EXTRA" }
+  ];
+  for (const cat of feeCategories) {
+    await prisma.feeCategory.upsert({
+      where: { code: cat.code },
+      update: {},
+      create: cat
+    });
+  }
 
   for (const [idx, item] of SERVICE_DOMAINS.entries()) {
     await prisma.servicePage.upsert({

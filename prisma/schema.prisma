@@ -122,3 +122,71 @@ model AdminUser {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// ==================== 海外仓财务勾兑系统 ====================
+
+/// 财务对账批次
+model ReconciliationBatch {
+  id            String   @id @default(cuid())
+  batchNo       String   @unique          // 批次号，如 RC-20240101-001
+  title         String                    // 批次标题
+  warehouseName String   @default("")     // 仓库名称
+  periodStart   String   @default("")     // 对账周期开始 YYYY-MM-DD
+  periodEnd     String   @default("")     // 对账周期结束 YYYY-MM-DD
+  status        String   @default("draft") // draft / reconciling / confirmed / disputed
+  totalOrders   Int      @default(0)      // 总订单数
+  matchedCount  Int      @default(0)      // 已匹配数
+  diffCount     Int      @default(0)      // 差异笔数
+  totalAmount   Float    @default(0)      // 我方总金额
+  whTotalAmount Float    @default(0)      // 仓库方总金额
+  diffAmount    Float    @default(0)      // 金额差异
+  notes         String   @default("")     // 备注
+  createdBy     String   @default("admin")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  items         ReconciliationItem[]
+}
+
+/// 财务对账明细
+model ReconciliationItem {
+  id              String   @id @default(cuid())
+  batchId         String
+  batch           ReconciliationBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  orderNo         String   @default("")     // 订单号 / 物流单号
+  orderDate       String   @default("")     // 订单日期
+  description     String   @default("")     // 业务描述（入库费、仓储费、出库费等）
+  myAmount        Float    @default(0)      // 我方金额
+  whAmount        Float    @default(0)      // 仓库方金额
+  diffAmount      Float    @default(0)      // 差异金额
+  currency        String   @default("THB")  // 币种
+  matchStatus     String   @default("pending") // pending / matched / mismatch / ignored
+  diffReason      String   @default("")     // 差异原因
+  resolvedAt      DateTime?                 // 解决时间
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([batchId])
+  @@index([orderNo])
+}
+
+/// 财务费用类别
+model FeeCategory {
+  id        String   @id @default(cuid())
+  name      String   @unique               // 入库费、仓储费、操作费、尾程配送费等
+  code      String   @unique               // INBOUND, STORAGE, HANDLING, LAST_MILE 等
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// 财务对账日志（审计追踪）
+model ReconciliationAuditLog {
+  id               String   @id @default(cuid())
+  batchId          String
+  action           String                   // created / item_matched / item_unmatched / status_change / note_added
+  detail           String   @default("")
+  operator         String   @default("admin")
+  createdAt        DateTime @default(now())
+
+  @@index([batchId])
+}

@@ -1,14 +1,8 @@
-import { redirect } from "next/navigation";
-import { isAdminAuthed } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
-import { AdminNav } from "@/components/admin-nav";
+import { AdminPageWrapper } from "@/components/admin-page-wrapper";
 import { AdminSolutionsManager } from "@/components/admin-solutions-manager";
 
 export default async function AdminSolutionsPage() {
-  if (!(await isAdminAuthed())) {
-    redirect("/admin");
-  }
-
   let optionPlans: Awaited<ReturnType<typeof prisma.questionOptionPlan.findMany>> = [];
   let bigPlans: Awaited<ReturnType<typeof prisma.solutionPlan.findMany>> = [];
   try {
@@ -28,9 +22,8 @@ export default async function AdminSolutionsPage() {
   }
 
   return (
-    <div>
-      <AdminNav />
+    <AdminPageWrapper title="方案库" description="配置问卷选项与小方案内容，保存后自动生成大方案快照。">
       <AdminSolutionsManager optionPlans={optionPlans} initialBigPlans={bigPlans} />
-    </div>
+    </AdminPageWrapper>
   );
 }

@@ -18,6 +18,9 @@ export function AdminNav() {
       <Link href="/admin/kb" className="btn-secondary">
         知识库
       </Link>
+      <Link href="/admin/reconciliation" className="btn-secondary">
+        财务勾兑
+      </Link>
     </nav>
   );
 }

@@ -1,21 +1,15 @@
-import { redirect } from "next/navigation";
-import { isAdminAuthed } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
-import { AdminNav } from "@/components/admin-nav";
+import { AdminPageWrapper } from "@/components/admin-page-wrapper";
 import { AdminServicesManager } from "@/components/admin-services-manager";
 
 export default async function AdminServicesPage() {
-  if (!(await isAdminAuthed())) {
-    redirect("/admin");
-  }
   const initial = await prisma.servicePage.findMany({
     orderBy: [{ domain: "asc" }, { sortOrder: "asc" }]
   });
 
   return (
-    <div>
-      <AdminNav />
+    <AdminPageWrapper title="业务内容维护" description="管理各业务板块的服务内容、案例和入口链接。">
       <AdminServicesManager initial={initial} />
-    </div>
+    </AdminPageWrapper>
   );
 }
