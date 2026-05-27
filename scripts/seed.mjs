@@ -2,13 +2,12 @@ import { createHash } from "crypto";
 import { PrismaClient } from "@prisma/client";
 
 const PASSWORD_SALT = process.env.PASSWORD_SALT || "xiangtai-default-salt-2024";
-const dbUrl = process.env.DATABASE_URL ?? "file:./prisma/dev.db";
 
 function hashPassword(password) {
   return createHash("sha256").update(PASSWORD_SALT + password).digest("hex");
 }
 
-const prisma = new PrismaClient({ datasourceUrl: dbUrl });
+const prisma = new PrismaClient();
 
 const serviceDomains = [
   {

@@ -1,8 +1,7 @@
 import { readFileSync } from "fs";
 import { PrismaClient } from "@prisma/client";
 
-const dbUrl = process.env.DATABASE_URL ?? "file:./prisma/dev.db";
-const prisma = new PrismaClient({ datasourceUrl: dbUrl });
+const prisma = new PrismaClient();
 
 async function main() {
   const filePath = process.argv[2];
