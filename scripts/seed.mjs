@@ -1,12 +1,14 @@
 import { createHash } from "crypto";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
 const PASSWORD_SALT = process.env.PASSWORD_SALT || "xiangtai-default-salt-2024";
+const dbUrl = process.env.DATABASE_URL ?? "file:./prisma/dev.db";
 
 function hashPassword(password) {
   return createHash("sha256").update(PASSWORD_SALT + password).digest("hex");
 }
+
+const prisma = new PrismaClient({ datasourceUrl: dbUrl });
 
 const serviceDomains = [
   {
@@ -75,7 +77,6 @@ const serviceDomains = [
 ];
 
 async function main() {
-  // Seed admin with hashed password
   const hashedPassword = hashPassword("123456");
   await prisma.adminUser.upsert({
     where: { username: "admin" },
@@ -83,7 +84,6 @@ async function main() {
     create: { username: "admin", password: hashedPassword }
   });
 
-  // Seed default fee categories
   const feeCategories = [
     { name: "入库费", code: "INBOUND" },
     { name: "仓储费", code: "STORAGE" },
